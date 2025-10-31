@@ -1,39 +1,60 @@
-import { useState } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { SubjectsContext } from "../hooks/SubjectsContext"
+import { useContext } from "react"
 
-export function NewSubjectPage({onAddSubject}){
-  const [addNameSubject, setAddNameSubject] = useState("")
-  const [addDescriptionSubject, setAddDescriptionSubject] = useState("")
-  function onSubmit(e){
-    e.preventDefault()
-    onAddSubject({id: Math.floor(Math.random() * 232), name: addNameSubject, description: addDescriptionSubject})
-    addNameSubject("")
-    addDescriptionSubject("")
+export function NewSubjectPage(){
+  const { control, handleSubmit, reset } = useForm({defaultValues: {
+    name: "",
+    description: ""
+  }})
+  const { addSubject } = useContext(SubjectsContext)
+
+
+  function onSubmit(data){
+    addSubject({
+      id: Math.floor(Math.random() * 232), name: data.name, description: data.description
+    })
+    reset()
   }
+
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <label>Digite o nome da materia </label>
-        <br />
-        <br />
-        <input 
-          placeholder="Digite o nome da materia" 
-          type="text" 
-          value={addNameSubject} 
-          onChange={(e) => setAddNameSubject(e.target.value)} 
+    <div >
+      <form 
+        onSubmit={handleSubmit(onSubmit)}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
+          backgroundColor: "gray",
+          padding: "8px",
+          margin: "8px 0"
+        }}
+      >
+        <Controller 
+          control={control}
+          name="name"
+          render={({field}) =>  
+            <input 
+            placeholder="Digite o nome da materia" 
+            type="text"
+            required
+            {...field}
+            />
+          }
         />
-        <br />
-        <br />
-        <label>Digite a descricao da materia </label>
-        <br />
-        <br />
-        <input 
-          placeholder="Digite a descricao da materia" 
-          type="text" value={addDescriptionSubject} 
-          onChange={(e) => setAddDescriptionSubject(e.target.value)} 
+        <Controller 
+          control={control}
+          name="description"
+          render={({ field }) =>
+            <input 
+              placeholder="Digite a descricao da materia" 
+              type="text"
+              required
+              {...field}
+              />
+          }
         />
-        <br />
-        <br />
-        <button type="submit">enviar</button>
+          <button type="submit">enviar</button>
       </form>
     </div>
   )

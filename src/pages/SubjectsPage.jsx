@@ -1,31 +1,24 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { SubjectsContext } from "../hooks/SubjectsContext"
 import { NewSubjectPage } from "./NewSubjectPage"
+import { SubjectCard } from "../components/SubjectCard"
+import * as yup from "yup" 
+
+const schema = yup.object({})
 
 export function SubjectsPage (){
-  const [subjectslist, setSubjectslist] = useState([{
-    id: 14353,
-    name: "Matemática",
-    description: "Estudo de números e operações",
-  }])
-  console.log(subjectslist)
-
-  function handleAddSubject(newName){
-    setSubjectslist([...subjectslist, newName])
-  }
-
+  const {subjectsList} = useContext(SubjectsContext)
 
   return (
+    
     <>
-      {
-        subjectslist.map((subject) => (
-          <div key={subject.id}>
-            <h2>{subject.name}</h2>
-            <p>{subject.description}</p>
-          </div>
-        ))
-
-      }
-      <NewSubjectPage onAddSubject={handleAddSubject}/>
+    {
+      subjectsList.map((subject) => (
+        <SubjectCard key={subject.id} id={subject.id} name={subject.name}/>
+      ))
+      
+    }
+      <NewSubjectPage />
     </>
   )
 }
